@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { List, type RowComponentProps } from 'react-window';
 import { Box, CircularProgress, Typography, Alert, Button } from '@mui/material';
 import { useInView } from 'react-intersection-observer';
@@ -53,11 +53,20 @@ const UserList = () => {
   const { ref: loadMoreRef, inView } = useInView({
     threshold: 0,
     rootMargin: '100px',
+    triggerOnce: false,
   });
 
+  const isFetchingRef = useRef(false);
+
   useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+    if (inView && hasNextPage && !isFetchingNextPage && !isFetchingRef.current) {
+      isFetchingRef.current = true;
+      fetchNextPage().finally(() => {
+        // Add a small delay before allowing next fetch
+        setTimeout(() => {
+          isFetchingRef.current = false;
+        }, 500);
+      });
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
