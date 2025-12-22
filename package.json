@@ -1,6 +1,6 @@
 {
-  "name": "reactjs-boilerplate",
-  "version": "0.5.0",
+  "name": "optimized-fetching-process",
+  "version": "1.0.0",
   "private": false,
   "source": "public/index.html",
   "dependencies": {
