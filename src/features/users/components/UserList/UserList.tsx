@@ -65,7 +65,7 @@ const UserList = () => {
     return (
       <Box className={styles.centerContainer}>
         <CircularProgress size={60} />
-        <Typography variant="h6" sx={{ mt: 2 }}>
+        <Typography variant="h6" sx={{ mt: 2, color: 'white' }}>
           Loading users...
         </Typography>
       </Box>
