@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: tenpo-challenge-jmzp
+    env: static
+    buildCommand: pnpm install && pnpm build
+    staticPublishPath: ./build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
