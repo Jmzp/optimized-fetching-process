@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -21,8 +21,16 @@ import { observer } from 'mobx-react';
 import { authStore } from '../../stores';
 import * as styles from './LoginPage.styles.css';
 
+interface LocationState {
+  from?: {
+    pathname: string;
+  };
+}
+
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as LocationState;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -39,7 +47,9 @@ const LoginPage = () => {
 
     const success = await authStore.login(email, password);
     if (success) {
-      navigate('/home');
+      // Redirect to the page they tried to visit, or /home
+      const from = state?.from?.pathname || '/home';
+      navigate(from, { replace: true });
     }
   };
 
