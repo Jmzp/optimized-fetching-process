@@ -68,22 +68,77 @@ Implementar una aplicación React que:
 - ❌ Scroll tradicional: Problemas de performance con 2000+ items
 - ✅ `react-window`: Balance perfecto entre features y tamaño
 
-### 3. **Infinite Scroll con Paginación**
+### 3. **Cliente HTTP Centralizado (Axios)**
 
-**Estrategia:**
+**Arquitectura:**
 
-- **Tamaño de página**: 50 usuarios por página (balance entre peticiones y UX)
-- **Precarga**: Carga siguiente página cuando quedan 10 items
-- **Total**: 2000 usuarios = 40 páginas
-- **Intersection Observer**: Detección nativa del navegador (mejor rendimiento)
+Cliente HTTP robusto implementado en `src/core/api/httpClient.ts` con patrón Singleton:
+
+```typescript
+class HttpClient {
+  private client: AxiosInstance;
+
+  // Request interceptor - Agrega token automáticamente
+  // Response interceptor - Manejo centralizado de errores
+  // Métodos: get, post, put, patch, delete
+}
+```
+
+**Características:**
+
+- ✅ **Interceptores de Request**: Agrega Bearer token automáticamente
+- ✅ **Interceptores de Response**: Manejo centralizado de errores HTTP
+- ✅ **Gestión de tokens**: `setToken()`, `clearToken()`, `getStoredToken()`
+- ✅ **Timeout configurable**: 30 segundos por defecto
+- ✅ **Manejo de status codes**: 401 (limpia token), 403, 404, 429, 5xx
+- ✅ **Mensajes en inglés**: Errores localizados y consistentes
+- ✅ **Type-safe**: Tipado completo con `ApiResponse<T>` y `ApiError`
+
+### 4. **Estrategia de Caché Optimizada**
+
+**Implementación:**
+
+En lugar de hacer 40 peticiones (2000 usuarios / 50 por página), el sistema:
+
+1. **Descarga una vez**: Obtiene los 2000 usuarios en una sola petición inicial
+2. **Caché en memoria**: Almacena los datos en una variable local del servicio
+3. **Paginación virtual**: Simula paginación cortando el array cacheado
+4. **Delay simulado**: 300ms para mantener UX realista
+
+```typescript
+let cachedData: CachedData | null = null;
+
+if (!cachedData) {
+  const response = await httpClient.get<CachedData>(URL_DATA);
+  cachedData = response.data;
+}
+
+const paginatedResults = cachedData.results.slice(startIndex, endIndex);
+```
 
 **Ventajas:**
 
-- Carga inicial rápida (~200ms)
-- Reducción de ancho de banda (carga progresiva)
-- Mejor UX (no hay "loading" bloqueante)
+- ⚡ **1 petición vs 40**: Reduce llamadas a la API en 97.5%
+- 🚀 **Carga instantánea**: Páginas subsecuentes son inmediatas
+- 💾 **Menor uso de red**: ~500KB una vez vs múltiples peticiones
+- 🎯 **UX superior**: Sin esperas entre páginas
 
-### 4. **Manejo de Errores Robusto**
+### 5. **Infinite Scroll con Virtualización**
+
+**Estrategia:**
+
+- **Tamaño de página virtual**: 50 usuarios por "página"
+- **Intersection Observer**: Detección cuando llegas al final de la lista
+- **React Window**: Solo renderiza ~10-15 items visibles
+- **Indicador flotante**: Loading toast que no afecta el scroll
+
+**Ventajas:**
+
+- Scroll suave a 60fps
+- Sin saltos ni reflows
+- Memoria constante (~15 nodos DOM)
+
+### 6. **Manejo de Errores Robusto**
 
 **Estrategia de 3 capas:**
 
@@ -99,7 +154,7 @@ Implementar una aplicación React que:
 - ❌ Respuesta malformada
 - ❌ Errores CORS
 
-### 5. **TypeScript en Modo Estricto**
+### 7. **TypeScript en Modo Estricto**
 
 **Beneficios:**
 
@@ -133,8 +188,11 @@ src/
 ├── shared/                 # Código compartido/común
 │   └── components/         # ErrorBoundary, LoadingSpinner
 ├── core/                   # Servicios centrales
-│   ├── api/                # Instancia de Axios, interceptores
-│   └── stores/             # Stores globales
+│   ├── api/                # Cliente HTTP centralizado
+│   │   ├── types.ts        # ApiResponse, ApiError, HttpClientConfig
+│   │   ├── httpClient.ts   # Singleton con interceptores
+│   │   └── index.ts        # Exports públicos
+│   └── stores/             # Stores globales (vacío - ver README.md interno)
 ├── App.tsx                 # Componente raíz
 └── index.tsx               # Punto de entrada
 ```
@@ -167,29 +225,6 @@ export const container = style({
 import * as styles from './Component.styles.css';
 
 const Component = () => <div className={styles.container}>...</div>;
-```
-
-## � Métricas de Performance
-
-### Optimizaciones Implementadas
-
-| Métrica                 | Sin Optimización | Con Optimización | Mejora      |
-| ----------------------- | ---------------- | ---------------- | ----------- |
-| **Initial Load**        | ~3000ms          | ~200ms           | **93% ⬇️**  |
-| **Nodos DOM**           | 2000+            | ~15              | **99% ⬇️**  |
-| **Memoria Heap**        | ~150MB           | ~20MB            | **87% ⬇️**  |
-| **FPS durante scroll**  | ~15fps           | 60fps            | **300% ⬆️** |
-| **Time to Interactive** | ~5s              | ~0.5s            | **90% ⬇️**  |
-
-### Estrategia de Consumo de API
-
-```
-Total de Usuarios: 2000
-Tamaño de Página: 50 usuarios
-Total de Páginas: 40
-Carga Inicial: 1 petición (50 usuarios)
-Cargas Subsecuentes: Bajo demanda (carga diferida)
-Duración del Caché: 5 minutos
 ```
 
 ## 🚀 Comenzando
@@ -314,9 +349,23 @@ Sistema de autenticación completo:
 ```
 1. Usuario ingresa credenciales → Login
 2. Token guardado en localStorage
-3. Redirect a /home
-4. Acceso a rutas protegidas (/users)
-5. Logout → Limpia token → Redirect a /login
+3. httpClient.setToken() configura el token
+4. Redirect a /home (muestra lista de usuarios directamente)
+5. Logout → Limpia token → httpClient.clearToken() → Redirect a /login
+```
+
+**Integración con httpClient:**
+
+El `authStore` se integra con el `httpClient` para gestión automática de tokens:
+
+```typescript
+// Al hacer login
+localStorage.setItem(TOKEN_KEY, FAKE_TOKEN);
+// httpClient detecta el token automáticamente en cada request
+
+// Al hacer logout
+localStorage.removeItem(TOKEN_KEY);
+// httpClient limpia el token en interceptor 401
 ```
 
 ## 🎨 Tematización
@@ -372,20 +421,57 @@ graph TD
     A[Inicio] --> B[Login Page]
     B --> C{Autenticado?}
     C -->|No| B
-    C -->|Sí| D[Home Page]
-    D --> E[Ver Lista de Usuarios]
-    E --> F[Users Page]
-    F --> G[Cargar 50 usuarios]
+    C -->|Sí| D[Home Page con Lista]
+    D --> E[Carga inicial: 2000 usuarios]
+    E --> F[Caché en memoria]
+    F --> G[Muestra primeros 50]
     G --> H[Scroll Down]
-    H --> I{Más usuarios?}
-    I -->|Sí| J[Cargar siguiente página]
-    J --> H
-    I -->|No| K[Fin de lista]
-    D --> L[Logout]
-    L --> B
+    H --> I{Más usuarios en caché?}
+    I -->|Sí| J[Slice siguiente página]
+    J --> K[Delay 300ms simulado]
+    K --> H
+    I -->|No| L[Fin de lista - 2000 usuarios]
+    D --> M[Logout]
+    M --> N[Limpia token y caché]
+    N --> B
 ```
 
-## 🎯 Consideraciones Técnicas
+## � Diseño UI
+
+### Layout Sin Scroll Global
+
+La aplicación usa un layout de altura fija sin scroll global:
+
+```
+┌─────────────────────────────────────┐
+│  🟢 Fondo Gradiente Verde (100vh)  │
+│                                     │
+│  ┌─────────────────────────────┐   │
+│  │  Header (AppBar)            │   │
+│  └─────────────────────────────┘   │
+│                                     │
+│  ┌─────────────────────────────┐   │
+│  │ 🤍 Card Blanca (Redondeada) │   │
+│  │                             │   │
+│  │  Users Directory            │   │
+│  │  ─────────────────────────  │   │
+│  │                             │   │
+│  │  [Lista con scroll interno] │   │
+│  │  ↕️                          │   │
+│  │                             │   │
+│  └─────────────────────────────┘   │
+└─────────────────────────────────────┘
+```
+
+**Características:**
+
+- ✅ Sin scroll global (overflow: hidden en body)
+- ✅ Card ocupa calc(100vh - 100px)
+- ✅ Solo la lista tiene scroll interno
+- ✅ Indicador de carga flotante (fixed position)
+- ✅ Diseño limpio y moderno con gradiente verde
+
+## � Consideraciones Técnicas
 
 ### Escalabilidad
 
@@ -396,11 +482,13 @@ graph TD
 
 ### Rendimiento
 
-- ✅ Virtualización de listas (react-window)
-- ✅ Caché inteligente (React Query)
-- ✅ Lazy loading de componentes
-- ✅ Code splitting automático (Parcel)
-- ✅ Optimización de re-renders (React.memo, useMemo)
+- ✅ **Virtualización de listas** (react-window) - Solo 10-15 nodos DOM
+- ✅ **Caché en memoria** - 1 petición para 2000 usuarios
+- ✅ **Paginación virtual** - Slice de array sin peticiones HTTP
+- ✅ **Lazy loading** de componentes
+- ✅ **Code splitting** automático (Parcel)
+- ✅ **Optimización de re-renders** (observer de MobX)
+- ✅ **Layout optimizado** - Sin scroll global, altura fija
 
 ### UX/UI
 
@@ -427,34 +515,12 @@ graph TD
 - [x] Lista virtualizada con infinite scroll
 - [x] Manejo de errores
 
-### Fase 2: Mejoras UX (Futuro)
-
-- [ ] Búsqueda y filtrado de usuarios
-- [ ] Ordenamiento por campos
-- [ ] Vista detalle de usuario (modal)
-- [ ] Favoritos/Bookmarks
-- [ ] Dark mode
-
-### Fase 3: Testing (Futuro)
-
-- [ ] Tests unitarios (componentes)
-- [ ] Tests de integración (funcionalidades)
-- [ ] Tests E2E (Playwright)
-- [ ] Tests de rendimiento
-
-### Fase 4: DevOps (Futuro)
-
-- [ ] Pipeline CI/CD
-- [ ] Despliegue con Docker
-- [ ] Monitoreo y analíticas
-- [ ] Seguimiento de errores (Sentry)
-
 ## 👨‍💻 Autor
 
-**José Manuel Zapata**
+**Jorge Mario Zapata Parra**
 
 - GitHub: [@Jmzp](https://github.com/Jmzp)
-- LinkedIn: [José Manuel Zapata](https://www.linkedin.com/in/jmzp)
+- LinkedIn: [Jorge Mario Zapata Parra](https://www.linkedin.com/in/jorge-zapata-3858a6100/)
 
 ## 📄 Licencia
 

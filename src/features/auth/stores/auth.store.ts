@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 
 const FAKE_TOKEN = 'fake-jwt-token-12345';
 const TOKEN_KEY = 'auth_token';
+const USER_EMAIL_KEY = 'user_email';
 
 class AuthStore {
   isAuthenticated = false;
@@ -15,9 +16,11 @@ class AuthStore {
 
   private checkAuth(): void {
     const token = localStorage.getItem(TOKEN_KEY);
-    if (token === FAKE_TOKEN) {
+    const email = localStorage.getItem(USER_EMAIL_KEY);
+
+    if (token === FAKE_TOKEN && email) {
       this.isAuthenticated = true;
-      this.user = { email: 'user@example.com' };
+      this.user = { email };
     }
   }
 
@@ -29,6 +32,7 @@ class AuthStore {
 
     runInAction(() => {
       localStorage.setItem(TOKEN_KEY, FAKE_TOKEN);
+      localStorage.setItem(USER_EMAIL_KEY, email);
       this.isAuthenticated = true;
       this.user = { email };
       this.isLoading = false;
@@ -39,6 +43,7 @@ class AuthStore {
 
   logout(): void {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_EMAIL_KEY);
     this.isAuthenticated = false;
     this.user = null;
   }
