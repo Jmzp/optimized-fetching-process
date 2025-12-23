@@ -1,28 +1,39 @@
+import { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { LoginPage, ProtectedRoute, PublicRoute } from '../../features/auth';
-import { HomePage } from '../../features/home';
+import { ProtectedRoute, PublicRoute } from '../../features/auth';
+import { LoadingSpinner } from '../../shared/components';
+
+// Lazy load pages to reduce initial bundle size
+const LoginPage = lazy(() =>
+  import('../../features/auth').then((module) => ({ default: module.LoginPage })),
+);
+const HomePage = lazy(() =>
+  import('../../features/home').then((module) => ({ default: module.HomePage })),
+);
 
 const AppRoutes = () => (
   <BrowserRouter>
-    <Routes>
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <LoginPage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/home"
-        element={
-          <ProtectedRoute>
-            <HomePage />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
+    <Suspense fallback={<LoadingSpinner />}>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </Suspense>
   </BrowserRouter>
 );
 

@@ -489,13 +489,13 @@ La aplicación usa un layout de altura fija sin scroll global:
 
 ### Rendimiento
 
-- ✅ **Virtualización de listas** (react-window) - Solo 10-15 nodos DOM
-- ✅ **Caché en memoria** - 1 petición para 2000 usuarios
-- ✅ **Paginación virtual** - Slice de array sin peticiones HTTP
-- ✅ **Lazy loading** de componentes
-- ✅ **Code splitting** automático (Parcel)
-- ✅ **Optimización de re-renders** (observer de MobX)
-- ✅ **Layout optimizado** - Sin scroll global, altura fija
+- ✅ **Core Web Vitals Optimizados** - Preload de fuentes críticas y Font Display Swap para mejorar LCP.
+- ✅ **Route-based Code Splitting** - Carga diferida de páginas (`React.lazy` + `Suspense`) para reducir bundle inicial.
+- ✅ **Virtualización de listas** (react-window) - Solo 10-15 nodos DOM.
+- ✅ **Caché en memoria** - 1 petición para 2000 usuarios.
+- ✅ **Paginación virtual** - Slice de array sin peticiones HTTP.
+- ✅ **Optimización de re-renders** (observer de MobX).
+- ✅ **Layout optimizado** - Sin scroll global, altura fija.
 
 ### UX/UI
 
