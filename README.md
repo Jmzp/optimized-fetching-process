@@ -101,6 +101,9 @@ class HttpClient {
 En lugar de hacer 40 peticiones (2000 usuarios / 50 por página), el sistema:
 
 1. **Descarga una vez**: Obtiene los 2000 usuarios en una sola petición inicial
+   ```typescript
+   const URL_DATA = 'https://randomuser.me/api/?results=2000';
+   ```
 2. **Caché en memoria**: Almacena los datos en una variable local del servicio
 3. **Paginación virtual**: Simula paginación cortando el array cacheado
 4. **Delay simulado**: 300ms para mantener UX realista
@@ -108,20 +111,26 @@ En lugar de hacer 40 peticiones (2000 usuarios / 50 por página), el sistema:
 ```typescript
 let cachedData: CachedData | null = null;
 
+// Solo se ejecuta una vez en la primera carga
 if (!cachedData) {
   const response = await httpClient.get<CachedData>(URL_DATA);
   cachedData = response.data;
 }
 
+// Paginación virtual en el cliente
+const pageSize = params.results || 50;
+const page = params.page || 1;
+const startIndex = (page - 1) * pageSize;
+const endIndex = startIndex + pageSize;
 const paginatedResults = cachedData.results.slice(startIndex, endIndex);
 ```
 
 **Ventajas:**
 
 - ⚡ **1 petición vs 40**: Reduce llamadas a la API en 97.5%
-- 🚀 **Carga instantánea**: Páginas subsecuentes son inmediatas
+- 🚀 **Carga instantánea**: Páginas subsecuentes son inmediatas (solo delay simulado)
 - 💾 **Menor uso de red**: ~500KB una vez vs múltiples peticiones
-- 🎯 **UX superior**: Sin esperas entre páginas
+- 🎯 **UX superior**: Sin esperas reales entre páginas
 
 ### 5. **Infinite Scroll con Virtualización**
 
@@ -278,17 +287,46 @@ Password: cualquier contraseña
 
 **Endpoint**: `https://randomuser.me/api/`
 
-**Parámetros utilizados:**
+**Estrategia de Consumo:**
 
-```typescript
-{
-  results: 50,        // Usuarios por página
-  page: 1,            // Número de página
-  seed: 'tenpo'       // Seed fijo para resultados consistentes
-}
-```
+La aplicación implementa una estrategia de **carga única con caché en memoria** para optimizar el rendimiento:
 
-**Estructura de respuesta:**
+1. **Petición Inicial (Una sola vez)**:
+
+   ```typescript
+   // URL utilizada en la primera carga
+   const URL_DATA = 'https://randomuser.me/api/?results=2000';
+   ```
+
+   - Se obtienen **2000 usuarios** en una única petición HTTP
+   - Los datos se almacenan en una variable de caché en memoria (`cachedData`)
+   - Esta petición solo se ejecuta la primera vez que se accede a la aplicación
+
+2. **Paginación Virtual (Cliente)**:
+
+   ```typescript
+   // Parámetros internos para paginación en el cliente
+   const pageSize = params.results || 50; // 50 usuarios por "página"
+   const page = params.page || 1; // Número de página actual
+
+   // Slice del array cacheado
+   const startIndex = (page - 1) * pageSize;
+   const endIndex = startIndex + pageSize;
+   const paginatedResults = cachedData.results.slice(startIndex, endIndex);
+   ```
+
+   - La paginación se simula cortando el array de datos cacheados
+   - Se incluye un delay artificial de 300ms para mantener UX realista
+   - **No se realizan peticiones HTTP adicionales** para páginas subsecuentes
+
+**Ventajas de esta estrategia:**
+
+- ⚡ **1 petición vs 40**: Reduce llamadas a la API en 97.5%
+- 🚀 **Carga instantánea**: Páginas subsecuentes son inmediatas (solo delay simulado)
+- 💾 **Menor uso de red**: ~500KB una vez vs múltiples peticiones
+- 🎯 **UX superior**: Sin esperas reales entre páginas
+
+**Estructura de respuesta de la API:**
 
 ```typescript
 interface ApiResponse {
