@@ -1,13 +1,10 @@
 import { style } from '@vanilla-extract/css';
 
-export const root = style({
-  minHeight: '100vh',
-  backgroundColor: '#f5f5f5',
-  paddingTop: '20px',
-  paddingBottom: '40px',
-});
-
 export const container = style({
-  paddingLeft: '16px',
-  paddingRight: '16px',
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100vh',
+  background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
+  padding: '0',
+  overflow: 'hidden',
 });

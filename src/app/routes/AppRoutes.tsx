@@ -7,8 +7,8 @@ import { LoadingSpinner } from '../../shared/components';
 const LoginPage = lazy(() =>
   import('../../features/auth').then((module) => ({ default: module.LoginPage })),
 );
-const HomePage = lazy(() =>
-  import('../../features/home').then((module) => ({ default: module.HomePage })),
+const UsersPage = lazy(() =>
+  import('../../features/users').then((module) => ({ default: module.UsersPage })),
 );
 
 const AppRoutes = () => (
@@ -27,7 +27,7 @@ const AppRoutes = () => (
           path="/home"
           element={
             <ProtectedRoute>
-              <HomePage />
+              <UsersPage />
             </ProtectedRoute>
           }
         />

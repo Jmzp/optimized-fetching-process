@@ -177,14 +177,12 @@ src/
 │   │   ├── hooks/          # useAuth
 │   │   ├── pages/          # LoginPage
 │   │   └── stores/         # auth.store (MobX)
-│   ├── users/              # Funcionalidad de usuarios (NUEVO)
+│   ├── users/              # Funcionalidad de usuarios
 │   │   ├── components/     # UserCard, UserList
 │   │   ├── hooks/          # useInfiniteUsers
-│   │   ├── pages/          # UsersPage
+│   │   ├── pages/          # UsersPage (Dashboard principal)
 │   │   ├── services/       # users.service (llamadas API)
 │   │   └── types/          # Tipos User, ApiResponse
-│   └── home/               # Funcionalidad de inicio
-│       └── pages/          # HomePage
 ├── shared/                 # Código compartido/común
 │   └── components/         # ErrorBoundary, LoadingSpinner
 ├── core/                   # Servicios centrales
@@ -428,7 +426,7 @@ graph TD
     A[Inicio] --> B[Login Page]
     B --> C{Autenticado?}
     C -->|No| B
-    C -->|Sí| D[Home Page con Lista]
+    C -->|Sí| D[Users Page (Dashboard)]
     D --> E[Carga inicial: 2000 usuarios]
     E --> F[Caché en memoria]
     F --> G[Muestra primeros 50]

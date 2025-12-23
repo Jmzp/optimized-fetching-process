@@ -7,6 +7,7 @@ const spin = keyframes({
 
 export const container = style({
   display: 'flex',
+  flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   height: '100vh',
@@ -16,6 +17,7 @@ export const container = style({
   top: 0,
   left: 0,
   zIndex: 9999,
+  gap: '16px',
 });
 
 export const spinner = style({
@@ -25,4 +27,11 @@ export const spinner = style({
   borderTop: '5px solid #11998e',
   borderRadius: '50%',
   animation: `${spin} 1s linear infinite`,
+});
+
+export const text = style({
+  fontFamily: 'Poppins, sans-serif',
+  color: '#11998e',
+  fontSize: '1rem',
+  fontWeight: 500,
 });
