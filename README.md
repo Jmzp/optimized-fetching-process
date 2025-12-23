@@ -339,20 +339,27 @@ Sistema de autenticación completo:
 
 - ✅ **Página de login** con formulario Material UI y validación
 - ✅ **Logout funcional** con limpieza de estado
-- ✅ **Rutas protegidas** usando componente `ProtectedRoute`
+- ✅ **Rutas protegidas** (`ProtectedRoute`) y públicas (`PublicRoute`)
 - ✅ **Store de autenticación** (MobX) para manejo de estado global
 - ✅ **Persistencia de token** en localStorage
-- ✅ **Redirección automática** después de login/logout
+- ✅ **Redirección inteligente** basada en intento de navegación
 
-**Flujo de autenticación:**
+**Flujo de autenticación y Rutas:**
 
-```
-1. Usuario ingresa credenciales → Login
-2. Token guardado en localStorage
-3. httpClient.setToken() configura el token
-4. Redirect a /home (muestra lista de usuarios directamente)
-5. Logout → Limpia token → httpClient.clearToken() → Redirect a /login
-```
+1. **ProtectedRoute**:
+   - Protege rutas privadas (ej. `/home`, `/profile`)
+   - Si no hay sesión: Redirige a `/login` guardando la ubicación original
+   - Si hay sesión: Permite el acceso
+
+2. **PublicRoute**:
+   - Maneja rutas de acceso público (ej. `/login`)
+   - Si hay sesión: Redirige automáticamente a la ruta que intentaba visitar o `/home`
+   - Si no hay sesión: Permite el acceso
+
+3. **Login Flow**:
+   - Usuario ingresa credenciales
+   - Se guarda token y email en localStorage
+   - Se redirige a la ruta original (guardada en state) o `/home`
 
 **Integración con httpClient:**
 
