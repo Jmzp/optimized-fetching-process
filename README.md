@@ -464,7 +464,7 @@ graph TD
     A[Inicio] --> B[Login Page]
     B --> C{Autenticado?}
     C -->|No| B
-    C -->|Sí| D[Users Page (Dashboard)]
+    C -->|Sí| D[Users Page Dashboard]
     D --> E[Carga inicial: 2000 usuarios]
     E --> F[Caché en memoria]
     F --> G[Muestra primeros 50]
