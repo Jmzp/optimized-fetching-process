@@ -513,6 +513,22 @@ La aplicación usa un layout de altura fija sin scroll global:
 - ✅ Convenciones de nomenclatura consistentes
 - ✅ Documentación en línea
 
+### Seguridad
+
+**Decisión Técnica: LocalStorage vs HttpOnly Cookies**
+
+Para este challenge, se implementó persistencia de sesión utilizando `localStorage` debido a la naturaleza _serverless_ (mock) del proyecto. Al no contar con un backend real que pueda establecer cabeceras `Set-Cookie`, `localStorage` permite simular la persistencia de sesión en el cliente.
+
+**Recomendación:**
+
+En un entorno productivo real para Tenpo, la arquitectura de seguridad debería migrar a:
+
+1. **HttpOnly Cookies**: Para almacenar el _Refresh Token_. Esto mitiga vulnerabilidades XSS (Cross-Site Scripting) ya que JavaScript no puede acceder a estas cookies.
+2. **Memory Storage**: Para el _Access Token_ (corta duración).
+3. **Token Rotation**: Implementar rotación de tokens para invalidar sesiones comprometidas.
+
+Esta estrategia no se implementó aquí para mantener el foco en la arquitectura Frontend y los objetivos del challenge.
+
 ## 🔮 Próximos Pasos (Roadmap)
 
 ### Fase 1: Funcionalidades Básicas ✅
