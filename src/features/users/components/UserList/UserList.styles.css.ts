@@ -12,6 +12,17 @@ export const container = style({
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
+  '@media': {
+    'screen and (max-width: 768px)': {
+      padding: '16px',
+      borderRadius: '16px',
+      height: 'calc(100vh - 80px)',
+    },
+    'screen and (max-width: 480px)': {
+      padding: '12px',
+      borderRadius: '12px',
+    },
+  },
 });
 
 export const header = style({
@@ -24,11 +35,23 @@ export const header = style({
   paddingBottom: '16px',
   borderBottom: '2px solid #e5e7eb',
   flexShrink: 0,
+  '@media': {
+    'screen and (max-width: 480px)': {
+      marginBottom: '16px',
+      paddingBottom: '12px',
+      gap: '8px',
+    },
+  },
 });
 
 export const title = style({
   fontWeight: 700,
   color: '#11998e',
+  '@media': {
+    'screen and (max-width: 480px)': {
+      fontSize: '1.25rem !important',
+    },
+  },
 });
 
 export const list = style({
@@ -42,6 +65,21 @@ export const centerContainer = style({
   justifyContent: 'center',
   minHeight: '60vh',
   padding: '20px',
+});
+
+export const loadingText = style({
+  marginTop: '16px !important',
+  color: 'white !important',
+});
+
+export const errorAlert = style({
+  maxWidth: '600px',
+  marginBottom: '16px !important',
+});
+
+export const listWrapper = style({
+  flex: 1,
+  overflow: 'hidden',
 });
 
 export const loadingMore = style({
@@ -59,6 +97,23 @@ export const loadingMore = style({
   boxShadow: '0 8px 24px rgba(17, 153, 142, 0.3)',
   border: '2px solid #11998e',
   backdropFilter: 'blur(12px)',
+  '@media': {
+    'screen and (max-width: 480px)': {
+      padding: '12px 16px',
+      bottom: '20px',
+      fontSize: '0.875rem',
+    },
+  },
+});
+
+export const loadingSpinner = style({
+  color: '#11998e !important',
+});
+
+export const loadingMoreText = style({
+  marginLeft: '16px !important',
+  color: '#11998e !important',
+  fontWeight: '600 !important',
 });
 
 export const endMessage = style({

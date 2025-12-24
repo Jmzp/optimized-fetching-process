@@ -16,6 +16,7 @@ export const container = style({
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: '100vh',
+  padding: '16px',
   background: 'linear-gradient(-45deg, #667eea, #764ba2, #6B8DD6, #8E37D7)',
   backgroundSize: '400% 400%',
   animation: `${gradientShift} 15s ease infinite`,
@@ -30,6 +31,12 @@ export const formCard = style({
   animation: `${fadeIn} 0.6s ease-out`,
   background: 'rgba(255, 255, 255, 0.95)',
   backdropFilter: 'blur(10px)',
+  '@media': {
+    'screen and (max-width: 480px)': {
+      padding: '32px 24px',
+      borderRadius: '12px',
+    },
+  },
 });
 
 export const logoContainer = style({
@@ -47,6 +54,12 @@ export const logo = style({
   alignItems: 'center',
   justifyContent: 'center',
   boxShadow: '0 10px 30px rgba(102, 126, 234, 0.4)',
+  '@media': {
+    'screen and (max-width: 480px)': {
+      width: '64px',
+      height: '64px',
+    },
+  },
 });
 
 export const title = style({
@@ -54,18 +67,34 @@ export const title = style({
   textAlign: 'center',
   fontWeight: 700,
   color: '#1a1a2e',
+  '@media': {
+    'screen and (max-width: 480px)': {
+      fontSize: '1.75rem !important',
+    },
+  },
 });
 
 export const subtitle = style({
   marginBottom: '40px !important',
   textAlign: 'center',
   color: '#6b7280',
+  '@media': {
+    'screen and (max-width: 480px)': {
+      marginBottom: '28px !important',
+      fontSize: '0.875rem !important',
+    },
+  },
 });
 
 export const form = style({
   display: 'flex',
   flexDirection: 'column',
   gap: '20px',
+  '@media': {
+    'screen and (max-width: 480px)': {
+      gap: '16px',
+    },
+  },
 });
 
 export const textField = style({});
@@ -133,4 +162,22 @@ export const footer = style({
   textAlign: 'center',
   color: '#6b7280',
   fontSize: '14px',
+});
+
+export const logoIcon = style({
+  fontSize: '40px !important',
+  color: 'white !important',
+  '@media': {
+    'screen and (max-width: 600px)': {
+      fontSize: '32px !important',
+    },
+  },
+});
+
+export const inputIcon = style({
+  color: '#9ca3af !important',
+});
+
+export const errorAlert = style({
+  borderRadius: '12px !important',
 });

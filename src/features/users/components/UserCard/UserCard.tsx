@@ -23,7 +23,6 @@ const UserCard = ({ user, style }: UserCardProps) => {
             src={user.picture.thumbnail}
             alt={fullName}
             className={styles.avatar}
-            sx={{ width: 56, height: 56 }}
           />
           <Box className={styles.nameSection}>
             <Typography variant="h6" className={styles.name}>

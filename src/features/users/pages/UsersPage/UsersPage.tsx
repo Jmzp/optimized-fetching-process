@@ -16,41 +16,21 @@ const UsersPage = () => {
 
   return (
     <Box className={styles.container}>
-      <AppBar
-        position="static"
-        elevation={0}
-        sx={{
-          background: 'transparent',
-          boxShadow: 'none',
-        }}
-      >
-        <Toolbar sx={{ justifyContent: 'space-between', py: 2, px: 3 }}>
-          <Box>
-            <Typography variant="h5" sx={{ fontWeight: 700, color: 'white' }}>
+      <AppBar position="static" elevation={0} className={styles.appBar}>
+        <Toolbar className={styles.toolbar}>
+          <Box className={styles.headerSection}>
+            <Typography variant="h5" className={styles.title}>
               Tenpo Challenge
             </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.95, color: 'white' }}>
+            <Typography variant="body2" className={styles.subtitle}>
               {authStore.user?.email}
             </Typography>
           </Box>
           <Button
             variant="contained"
-            startIcon={<LogoutOutlined />}
+            startIcon={<LogoutOutlined className={styles.logoutIcon} />}
             onClick={handleLogout}
-            sx={{
-              backgroundColor: 'white',
-              color: '#11998e',
-              borderRadius: '12px',
-              textTransform: 'none',
-              fontWeight: 600,
-              px: 3,
-              py: 1,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-              '&:hover': {
-                backgroundColor: '#f8f9fa',
-                boxShadow: '0 6px 16px rgba(0, 0, 0, 0.2)',
-              },
-            }}
+            className={styles.logoutButton}
           >
             Logout
           </Button>

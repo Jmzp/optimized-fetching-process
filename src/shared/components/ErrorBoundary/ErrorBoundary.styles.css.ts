@@ -22,6 +22,7 @@ export const message = style({
 });
 
 export const details = style({
+  marginTop: '24px',
   padding: '16px',
   backgroundColor: '#f5f5f5',
   borderRadius: '8px',
@@ -30,4 +31,14 @@ export const details = style({
   textAlign: 'left',
   fontSize: '14px',
   fontFamily: 'monospace',
+});
+
+export const buttonGroup = style({
+  display: 'flex',
+  gap: '16px',
+  marginBottom: '24px',
+});
+
+export const stackTitle = style({
+  marginTop: '16px !important',
 });

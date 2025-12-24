@@ -58,7 +58,7 @@ const LoginPage = () => {
       <Card className={styles.formCard} elevation={0}>
         <Box className={styles.logoContainer}>
           <Box className={styles.logo}>
-            <LockOutlined sx={{ fontSize: 40, color: 'white' }} />
+            <LockOutlined className={styles.logoIcon} />
           </Box>
         </Box>
 
@@ -80,7 +80,7 @@ const LoginPage = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <EmailOutlined sx={{ color: '#9ca3af' }} />
+                  <EmailOutlined className={styles.inputIcon} />
                 </InputAdornment>
               ),
             }}
@@ -96,7 +96,7 @@ const LoginPage = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <LockOutlined sx={{ color: '#9ca3af' }} />
+                  <LockOutlined className={styles.inputIcon} />
                 </InputAdornment>
               ),
               endAdornment: (
@@ -107,9 +107,9 @@ const LoginPage = () => {
                     size="small"
                   >
                     {showPassword ? (
-                      <VisibilityOff sx={{ color: '#9ca3af' }} />
+                      <VisibilityOff className={styles.inputIcon} />
                     ) : (
-                      <Visibility sx={{ color: '#9ca3af' }} />
+                      <Visibility className={styles.inputIcon} />
                     )}
                   </IconButton>
                 </InputAdornment>
@@ -119,7 +119,7 @@ const LoginPage = () => {
           />
 
           {error && (
-            <Alert severity="error" sx={{ borderRadius: '12px' }}>
+            <Alert severity="error" className={styles.errorAlert}>
               {error}
             </Alert>
           )}

@@ -74,7 +74,7 @@ const UserList = () => {
     return (
       <Box className={styles.centerContainer}>
         <CircularProgress size={60} />
-        <Typography variant="h6" sx={{ mt: 2, color: 'white' }}>
+        <Typography variant="h6" className={styles.loadingText}>
           Loading users...
         </Typography>
       </Box>
@@ -84,7 +84,7 @@ const UserList = () => {
   if (isError) {
     return (
       <Box className={styles.centerContainer}>
-        <Alert severity="error" sx={{ maxWidth: 600, mb: 2 }}>
+        <Alert severity="error" className={styles.errorAlert}>
           <Typography variant="h6" gutterBottom>
             Error loading users
           </Typography>
@@ -120,7 +120,7 @@ const UserList = () => {
         </Typography>
       </Box>
 
-      <Box sx={{ flex: 1, overflow: 'hidden' }}>
+      <Box className={styles.listWrapper}>
         <List
           rowComponent={RowComponent}
           rowCount={users.length}
@@ -133,11 +133,8 @@ const UserList = () => {
 
       {isFetchingNextPage && (
         <Box className={styles.loadingMore}>
-          <CircularProgress size={30} sx={{ color: '#11998e' }} />
-          <Typography
-            variant="body2"
-            sx={{ ml: 2, color: '#11998e', fontWeight: 600 }}
-          >
+          <CircularProgress size={30} className={styles.loadingSpinner} />
+          <Typography variant="body2" className={styles.loadingMoreText}>
             Loading more users...
           </Typography>
         </Box>

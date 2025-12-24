@@ -71,7 +71,7 @@ class ErrorBoundary extends Component<Props, State> {
             We&apos;re sorry for the inconvenience. Please try refreshing the page or
             contact support if the problem persists.
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+          <Box className={styles.buttonGroup}>
             <Button variant="contained" color="primary" onClick={this.handleReload}>
               Refresh Page
             </Button>
@@ -87,7 +87,11 @@ class ErrorBoundary extends Component<Props, State> {
               <pre>{error.toString()}</pre>
               {errorInfo && (
                 <>
-                  <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}>
+                  <Typography
+                    variant="subtitle2"
+                    gutterBottom
+                    className={styles.stackTitle}
+                  >
                     Component Stack:
                   </Typography>
                   <pre>{errorInfo.componentStack}</pre>
