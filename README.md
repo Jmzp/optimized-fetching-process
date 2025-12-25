@@ -6,12 +6,11 @@ Proyecto desarrollado como parte del proceso de selección para la posición de 
 
 Implementar una aplicación React que:
 
-- ✅ Sistema de autenticación (Login/Logout)
-- ✅ Consumo optimizado de API externa (randomuser.me)
-- ✅ Visualización eficiente de 2000+ usuarios
-- ✅ Infinite scroll con virtualización
-- ✅ Manejo robusto de errores
-- ✅ Arquitectura escalable y mantenible
+- Levante una pantalla de login (correo y pass) y haga un fake-login (código 200-OK +
+token-fake).
+- Levantar una home, la cual se conecte con una API pública (a elección) y muestre
+una lista de 2000 elementos.
+- Mostrar un botón de logout que te devuelva al login y limpie la sesión.
 
 ## 🚀 Stack Tecnológico
 
@@ -132,6 +131,8 @@ const paginatedResults = cachedData.results.slice(startIndex, endIndex);
 - 💾 **Menor uso de red**: ~500KB una vez vs múltiples peticiones
 - 🎯 **UX superior**: Sin esperas reales entre páginas
 
+> Ahora bien, no es el mejor camino, pero para efectos prácticos de lo que el challenge busca, fue la solución implementada
+
 ### 5. **Infinite Scroll con Virtualización**
 
 **Estrategia:**
@@ -143,7 +144,7 @@ const paginatedResults = cachedData.results.slice(startIndex, endIndex);
 
 **Ventajas:**
 
-- Scroll suave a 60fps
+- Scroll suave
 - Sin saltos ni reflows
 - Memoria constante (~15 nodos DOM)
 
@@ -234,7 +235,7 @@ import * as styles from './Component.styles.css';
 const Component = () => <div className={styles.container}>...</div>;
 ```
 
-## 🚀 Comenzando
+## 🚀 Setup
 
 ### Prerequisitos
 
@@ -321,10 +322,9 @@ La aplicación implementa una estrategia de **carga única con caché en memoria
 
 **Ventajas de esta estrategia:**
 
-- ⚡ **1 petición vs 40**: Reduce llamadas a la API en 97.5%
-- 🚀 **Carga instantánea**: Páginas subsecuentes son inmediatas (solo delay simulado)
+- ⚡ **1 petición vs 40**: Reduce llamadas a la API
+- 🚀 **Carga instantánea**: Páginas subsecuentes se cargan de forma inmediata
 - 💾 **Menor uso de red**: ~500KB una vez vs múltiples peticiones
-- 🎯 **UX superior**: Sin esperas reales entre páginas
 
 **Estructura de respuesta de la API:**
 
@@ -531,13 +531,11 @@ La aplicación usa un layout de altura fija sin scroll global:
 - ✅ **Caché en memoria** - 1 petición para 2000 usuarios.
 - ✅ **Paginación virtual** - Slice de array sin peticiones HTTP.
 - ✅ **Optimización de re-renders** (observer de MobX).
-- ✅ **Layout optimizado** - Sin scroll global, altura fija.
 
 ### UX/UI
 
 - ✅ Estados de carga informativos
 - ✅ Manejo de errores con mensajes claros
-- ✅ Skeleton loaders
 - ✅ Diseño responsivo
 - ✅ Desplazamiento suave
 
@@ -567,12 +565,11 @@ Esta estrategia no se implementó aquí para mantener el foco en la arquitectura
 
 ## 🔮 Próximos Pasos (Roadmap)
 
-### Fase 1: Funcionalidades Básicas ✅
+### Fase 2: Funcionalidades Básicas ✅
 
-- [x] Sistema de autenticación
-- [x] Consumo de API externa
-- [x] Lista virtualizada con infinite scroll
-- [x] Manejo de errores
+- [ ] Token efimero pero real
+- [ ] Paginacion del lado del backend
+- [ ] Filtros y busqueda de usuarios
 
 ## 👨‍💻 Autor
 
