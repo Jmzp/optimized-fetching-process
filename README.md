@@ -565,7 +565,7 @@ Esta estrategia no se implementó aquí para mantener el foco en la arquitectura
 
 ## 🔮 Próximos Pasos (Roadmap)
 
-### Fase 2: Funcionalidades Básicas ✅
+### Fase 2: Funcionalidades Avanzadas
 
 - [ ] Token efimero pero real
 - [ ] Paginacion del lado del backend
