@@ -1,19 +1,19 @@
-# Core Stores
+# Almacenes globales
 
-This directory is reserved for **global MobX stores** that are shared across multiple features in the application.
+Este directorio está reservado para **almacenes globales de MobX** que se comparten entre múltiples características de la aplicación.
 
-## 📋 Purpose
+## 📋 Propósito
 
-Core stores should contain application-wide state that doesn't belong to any specific feature. They represent cross-cutting concerns that multiple features need to access.
+Los almacenes centrales deben contener el estado de la aplicación a nivel global que no pertenece a ninguna característica específica. Representan preocupaciones transversales a las que necesitan acceder varias características.
 
-## 🎯 What Should Go Here
+## 🎯 Qué debe ir aquí
 
-### Examples of Core Stores:
+### Ejemplos de almacenes centrales:
 
-1. **`uiStore.ts`** - Global UI state
+1. **`uiStore.ts`** - Estado global de la UI
 
    ```typescript
-   // Theme, sidebar, global modals, toast notifications
+   // Tema, barra lateral, modales globales, notificaciones toast
    class UiStore {
      theme: 'light' | 'dark' = 'light';
      sidebarOpen: boolean = true;
@@ -21,10 +21,10 @@ Core stores should contain application-wide state that doesn't belong to any spe
    }
    ```
 
-2. **`appStore.ts`** - Application configuration
+2. **`appStore.ts`** - Configuración de la aplicación
 
    ```typescript
-   // Global settings, feature flags, language
+   // Ajustes globales, flags de características, idioma
    class AppStore {
      language: 'en' | 'es' = 'en';
      isOnline: boolean = true;
@@ -32,7 +32,7 @@ Core stores should contain application-wide state that doesn't belong to any spe
    }
    ```
 
-3. **`routerStore.ts`** - Navigation state (if using MobX with router)
+3. **`routerStore.ts`** - Estado de navegación (si se usa MobX con router)
    ```typescript
    class RouterStore {
      currentPath: string = '/';
@@ -40,59 +40,59 @@ Core stores should contain application-wide state that doesn't belong to any spe
    }
    ```
 
-## ❌ What Should NOT Go Here
+## ❌ Qué NO debe ir aquí
 
-### Feature-Specific Stores
+### Almacenes específicos de una característica
 
-Stores that belong to a specific feature should stay in their feature directory:
+Los almacenes que pertenecen a una característica específica deben permanecer en el directorio de esa característica:
 
-- ✅ `features/auth/stores/auth.store.ts` - Authentication state
-- ✅ `features/users/stores/users.store.ts` - User management state
-- ✅ `features/cart/stores/cart.store.ts` - Shopping cart state
+- ✅ `features/auth/stores/auth.store.ts` - Estado de autenticación
+- ✅ `features/users/stores/users.store.ts` - Estado de gestión de usuarios
+- ✅ `features/cart/stores/cart.store.ts` - Estado del carrito de compras
 
-## 🏗️ Current Architecture
+## 🏗️ Arquitectura actual
 
 ```
 src/
 ├── core/
-│   ├── api/              ✅ Shared HTTP client
-│   └── stores/           📁 Global stores (currently empty - correct!)
+│   ├── api/              ✅ Cliente HTTP compartido
+│   └── stores/           📁 Almacenes globales (¡actualmente vacío - correcto!)
 ├── features/
 │   ├── auth/
-│   │   └── stores/       ✅ authStore (feature-specific)
+│   │   └── stores/       ✅ authStore (específico de la característica)
 │   └── users/
-│       └── hooks/        ✅ React Query hooks (server state)
+│       └── hooks/        ✅ Hooks de React Query (estado del servidor)
 ```
 
-## 🎯 When to Add a Store Here
+## 🎯 Cuándo añadir un almacén aquí
 
-Only add a store to `core/stores/` when:
+Sólo añade un almacén a `core/stores/` cuando:
 
-1. **Multiple features need it** - Used by 2+ different features
-2. **Not feature-specific** - Doesn't belong to any single feature
-3. **Global configuration** - App-wide settings or state
-4. **Cross-cutting concern** - Affects the entire application
+1. **Lo necesiten varias características** - Lo usan 2 o más características distintas
+2. **No es específico de una característica** - No pertenece a una sola característica
+3. **Configuración global** - Ajustes o estado a nivel de aplicación
+4. **Preocupación transversal** - Afecta a toda la aplicación
 
-## 💡 Current Status
+## 💡 Estado actual
 
-**This directory is intentionally empty** because:
+**Este directorio está intencionalmente vacío** porque:
 
-- ✅ `authStore` is feature-specific (in `features/auth/stores/`)
-- ✅ Server state is managed by React Query (in `features/users/hooks/`)
-- ✅ No global UI state is needed yet
-- ✅ No cross-feature shared state exists
+- ✅ `authStore` es específico de la característica (en `features/auth/stores/`)
+- ✅ El estado del servidor se gestiona con React Query (en `features/users/hooks/`)
+- ✅ Aún no se necesita estado global de UI
+- ✅ No existe estado compartido entre características
 
-This follows the **feature-first architecture** principle: keep things in features until they truly need to be global.
+Esto sigue el principio de arquitectura **feature-first**: mantener las cosas en las características hasta que realmente necesiten ser globales.
 
-## 📚 Example: When to Move a Store Here
+## 📚 Ejemplo: Cuándo mover un almacén aquí
 
-**Scenario:** You add a theme toggle that's used in:
+**Escenario:** Añades un selector de tema que se usa en:
 
-- Login page (auth feature)
-- Home page (home feature)
-- User list (users feature)
+- Página de inicio de sesión (feature auth)
+- Página principal (feature home)
+- Lista de usuarios (feature users)
 
-**Then create:**
+**Entonces crea:**
 
 ```typescript
 // core/stores/theme.store.ts
